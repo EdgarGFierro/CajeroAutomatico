@@ -1,0 +1,61 @@
+#include <iostream>
+#include <cstdlib> 
+#include <iomanip> 
+
+using namespace std;
+
+struct Cuenta {
+    int numeroCuenta;
+    float saldo;
+};
+
+// Prototipos (Planeacion)
+void limpiarPantalla();
+void mostrarMenu();
+void consultarSaldo(Cuenta *c);
+void depositar(Cuenta *c);
+void retirar(Cuenta *c);
+void transferir(Cuenta *origen, Cuenta cuentas[], int n);
+int buscarCuenta(Cuenta cuentas[], int n, int numeroBuscado);
+
+int main() {
+    // Datos de prueba iniciales
+    const int N = 3;
+    Cuenta cuentas[N] = {
+        {1001, 1.00}, 
+        {1002, 500.00}, 
+        {1003, 1000.00} 
+    };
+
+    // Por ahora solo probamos que el menu se muestre
+    mostrarMenu();
+    
+    cout << "Sistema inicilizado correctamente. (Logica en proceso)" << endl;
+
+    return 0;
+}
+
+void limpiarPantalla() {
+    #ifdef _WIN32
+        system("cls");
+    #else
+        system("clear"); 
+    #endif
+}
+
+void mostrarMenu() {
+    cout << "BANCO EL MEJOR - MENU PRINCIPAL" << endl;
+    cout << "1. Consultar Saldo" << endl;
+    cout << "2. Depositar" << endl;
+    cout << "3. Retirar" << endl;
+    cout << "4. Transferir" << endl;
+    cout << "5. Cerrar Sesion" << endl;
+    cout << "6. Apagar Cajero" << endl;
+}
+
+// Funciones vacias (Stubs) para evitar errores de compilacion
+void consultarSaldo(Cuenta *c) {}
+void depositar(Cuenta *c) {}
+void retirar(Cuenta *c) {}
+void transferir(Cuenta *origen, Cuenta cuentas[], int n) {}
+int buscarCuenta(Cuenta cuentas[], int n, int numeroBuscado) { return -1; }
