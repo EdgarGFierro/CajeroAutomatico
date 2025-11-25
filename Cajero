@@ -1,61 +1,64 @@
-#include <iostream>
-#include <cstdlib> 
-#include <iomanip> 
-
-using namespace std;
-
-struct Cuenta {
-    int numeroCuenta;
-    float saldo;
-};
-
-// Prototipos (Planeacion)
-void limpiarPantalla();
-void mostrarMenu();
-void consultarSaldo(Cuenta *c);
-void depositar(Cuenta *c);
-void retirar(Cuenta *c);
-void transferir(Cuenta *origen, Cuenta cuentas[], int n);
-int buscarCuenta(Cuenta cuentas[], int n, int numeroBuscado);
-
-int main() {
-    // Datos de prueba iniciales
-    const int N = 3;
-    Cuenta cuentas[N] = {
-        {1001, 1.00}, 
-        {1002, 500.00}, 
-        {1003, 1000.00} 
-    };
-
-    // Por ahora solo probamos que el menu se muestre
-    mostrarMenu();
-    
-    cout << "Sistema inicilizado correctamente. (Logica en proceso)" << endl;
-
-    return 0;
+[cite_start]// [cite: 31-33]
+void consultarSaldo(Cuenta *c) {
+    limpiarPantalla();
+    cout << fixed << setprecision(2); 
+    cout << "Tu saldo actual es: $" << c->saldo << endl;
+    cout << "Presiona Enter para volver...";
+    cin.ignore(); cin.get();
 }
 
-void limpiarPantalla() {
-    #ifdef _WIN32
-        system("cls");
-    #else
-        system("clear"); 
-    #endif
+[cite_start]// [cite: 34-41]
+void depositar(Cuenta *c) {
+    float monto;
+    limpiarPantalla();
+    cout << "Cuanto quieres depositar?" << endl;
+    cin >> monto;
+    try {
+        if (cin.fail()) throw "Eso no es un numero.";
+        if (monto <= 0) throw "El monto debe ser mayor a 0.";
+
+        c->saldo += monto;
+        
+        cout << fixed << setprecision(2);
+        cout << "Listo. Nuevo saldo: $" << c->saldo << endl;
+        
+        cin.ignore(); cin.get();
+    } catch (const char* msg) {
+        cout << "Error: " << msg << endl;
+        if (cin.fail()) {
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        } else {
+            cin.ignore();
+        }
+        cin.get();
+    }
 }
 
-void mostrarMenu() {
-    cout << "BANCO EL MEJOR - MENU PRINCIPAL" << endl;
-    cout << "1. Consultar Saldo" << endl;
-    cout << "2. Depositar" << endl;
-    cout << "3. Retirar" << endl;
-    cout << "4. Transferir" << endl;
-    cout << "5. Cerrar Sesion" << endl;
-    cout << "6. Apagar Cajero" << endl;
-}
+[cite_start]// [cite: 42-49]
+void retirar(Cuenta *c) {
+    float monto;
+    limpiarPantalla();
+    cout << "Cuanto quieres retirar?" << endl;
+    cin >> monto;
+    try {
+        if (cin.fail()) throw "Eso no es un numero.";
+        if (monto <= 0) throw "Monto invalido.";
+        if (monto > c->saldo) throw "No tienes suficiente saldo.";
 
-// Funciones vacias (Stubs) para evitar errores de compilacion
-void consultarSaldo(Cuenta *c) {}
-void depositar(Cuenta *c) {}
-void retirar(Cuenta *c) {}
-void transferir(Cuenta *origen, Cuenta cuentas[], int n) {}
-int buscarCuenta(Cuenta cuentas[], int n, int numeroBuscado) { return -1; }
+        c->saldo -= monto;
+        cout << fixed << setprecision(2);
+        cout << "Retiro listo. Nuevo saldo: $" << c->saldo << endl;
+
+        cin.ignore(); cin.get();
+    } catch (const char* msg) {
+        cout << "Error: " << msg << endl;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        } else {
+            cin.ignore();
+        }
+        cin.get();
+    }
+}
