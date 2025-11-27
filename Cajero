@@ -203,3 +203,65 @@ void retirar(Cuenta *c) {
         cin.get();
     }
 }
+
+void transferir(Cuenta *origen, Cuenta cuentas[], int n) {
+    int cuentaDestinoID;
+    float monto;
+    
+    limpiarPantalla();
+    cout << "A que cuenta quieres transferir?" << endl;
+    cin >> cuentaDestinoID;
+
+    if (cin.fail()) {
+        cin.clear(); cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cout << "Numero de cuenta invalido." << endl;
+        cout << "Presiona Enter...";
+        cin.get();
+        return;
+    }
+
+    int indiceDestino = buscarCuenta(cuentas, n, cuentaDestinoID);
+
+    if (indiceDestino == -1) {
+        cout << "Esa cuenta no existe." << endl;
+        cout << "Presiona Enter...";
+        cin.ignore(); cin.get();
+        return; 
+    }
+
+    if (cuentas[indiceDestino].numeroCuenta == origen->numeroCuenta) {
+        cout << "No te puedes transferir a ti mismo." << endl;
+        cout << "Presiona Enter...";
+        cin.ignore(); cin.get();
+        return;
+    }
+
+    cout << "Cuanto quieres transferir?" << endl;
+    cin >> monto;
+
+    try {
+        if (cin.fail()) throw "Eso no es un numero.";
+        if (monto <= 0) throw "Monto invalido.";
+        if (monto > origen->saldo) throw "No tienes saldo suficiente.";
+
+        origen->saldo -= monto;
+        cuentas[indiceDestino].saldo += monto;
+
+        cout << fixed << setprecision(2);
+        cout << "Transferencia de $" << monto << " realizada con exito." << endl;
+        cout << "Tu saldo quedo en: $" << origen->saldo << endl;
+
+        cin.ignore(); cin.get();
+
+    } catch (const char* msg) {
+        cout << "Error: " << msg << endl;
+        
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        } else {
+            cin.ignore();
+        }
+        cin.get();
+    }
+}
